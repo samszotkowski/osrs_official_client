@@ -46,28 +46,33 @@ while True:
         ORDER BY sourceDrop.modified ASC
         """
         new_ids = set()
-        new_drops = {}
+        new_sources = {}
         for row in cursor.execute(query):
             name, timestamp, unique_id, object_id, count = row
 
             if unique_id not in unique_ids:
                 new_ids.add(unique_id)
-                drop = {
-                    "unique_id": unique_id,
-                    "name": name,
+
+                drop = []
+                if object_id:
+                    drop = [{"id": object_id, "quantity": count}]
+
+                source = {
+                    "unique_id": unique_id, 
+                    "name": name, 
                     "timestamp": timestamp,
-                    "drops": [{"id": object_id, "quantity": count}]
+                    "drops": drop
                 }
 
-                if unique_id not in new_drops:
-                    new_drops[unique_id] = drop
+                if unique_id not in new_sources:
+                    new_sources[unique_id] = source
                 else:
-                    new_drops[unique_id]["drops"].append({"id": object_id, "quantity": count})
+                    new_sources[unique_id]["drops"].extend(drop)
 
         with open(output_loot_log_path, "at", encoding="utf-8") as file:
-            for drop in new_drops.values():
-                print(drop)
-                json.dump(drop, file)
+            for source in new_sources.values():
+                print(source)
+                json.dump(source, file)
                 file.write("\n")
 
         unique_ids.update(new_ids)
