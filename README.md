@@ -1,4 +1,4 @@
-This script logs drops from the official client as they come in.
+This script logs drops from the official client as they come in. This is necessary because every time you log out of the game, the client deletes a bunch of the kill-by-kill loot data (aka "Drop view"). You can see this when you log back in -- it keeps the aggregated loot ("Source view"), but the drop view may have some holes.
 
 - You're meant to run this while you are playing the game.
 
@@ -12,3 +12,6 @@ This script logs drops from the official client as they come in.
 
 - Change `output_loot_log_path` at the top to be the place you want your output log file to go.
   - If the file you put in there already exists, no big deal, it will create a new one with a number after it each time you run it.
+
+==Trivia==
+- The in-game look at the "Drops view" will only ever show your last 20 kc, but the database holds much more. Idk why they cut it off at 20.
